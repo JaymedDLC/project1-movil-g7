@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'welcome.dart'; // Asegúrate de que la importación sea correcta
+import 'pet_screen.dart'; // Cambiar HomeScreen por PetScreen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,7 +25,6 @@ class LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Campo para el nombre de usuario
             TextField(
               controller: _usernameController,
               decoration: const InputDecoration(
@@ -34,10 +33,9 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            // Campo para la contraseña
             TextField(
               controller: _passwordController,
-              obscureText: true, // Oculta el texto de la contraseña
+              obscureText: true,
               decoration: const InputDecoration(
                 labelText: 'Contraseña',
                 border: OutlineInputBorder(),
@@ -56,11 +54,11 @@ class LoginScreenState extends State<LoginScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WelcomeScreen(username: _username),
+                      builder: (context) => const PetScreen(), // Cambiar a PetScreen
                     ),
                   );
                 } else {
-                  // Mostrar un mensaje de error si algún campo está vacío
+                  // Mostrar mensaje de error
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Por favor, ingrese nombre de usuario y contraseña.'),
