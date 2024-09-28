@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project1_movil_g7/widgets/footer_navigation.dart';
+import '../widgets/footer_navigation.dart';
+import '../widgets/appbar.dart';
 
 class PetScreen extends StatelessWidget {
   const PetScreen({super.key});
@@ -7,41 +8,7 @@ class PetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-  automaticallyImplyLeading: false, // Evita que aparezca la flecha
-  title: const Text('Mascota'),
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.account_circle),
-      onPressed: () {
-        // Lógica para cerrar sesión
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Cerrar sesión'),
-              content: const Text('¿Seguro que quieres cerrar sesión?'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Cierra el diálogo
-                  },
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/login');
-                  },
-                  child: const Text('Cerrar sesión'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ),
-  ],
-),
+      appBar: const CustomAppBar(),
 
       body: Column(
         children: <Widget>[

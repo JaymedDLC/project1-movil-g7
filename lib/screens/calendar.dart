@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Paquete para trabajar con fechas
-import 'package:project1_movil_g7/widgets/footer_navigation.dart';
+import '../widgets/footer_navigation.dart';
+import '../widgets/appbar.dart';
 import 'welcome.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -12,21 +13,7 @@ class CalendarScreen extends StatelessWidget {
     int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Calendario'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            // Regresar directamente a Welcome
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const WelcomeScreen(username: "Usuario"),
-              ),
-            );
-          },
-        ),
-      ),
+      appBar: const CustomAppBar(),
       body: Column(
         children: [
           // Texto de "Progreso completado!" en una sección separada
