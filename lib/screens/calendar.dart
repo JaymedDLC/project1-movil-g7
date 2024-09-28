@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Paquete para trabajar con fechas
+import 'package:project1_movil_g7/widgets/footer_navigation.dart';
 import 'welcome.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -76,40 +77,7 @@ class CalendarScreen extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Inicio',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Calendario',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pending),
-            label: 'Pendiente',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pending),
-            label: 'Pendiente',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            // Volver a la pantalla de bienvenida y reemplazar la actual en la pila
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const WelcomeScreen(username: "Usuario"),
-              ),
-            );
-          } else if (index == 1) {
-            // Estás en la pantalla del calendario
-          }
-        },
-      ),
+      bottomNavigationBar: const FooterNavigation(),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'welcome.dart';
+import 'pet_screen.dart'; // Cambiar HomeScreen por PetScreen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,7 +34,7 @@ class LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 // Título
-                Text(
+                const Text(
                   'Iniciar Sesión',
                   style: TextStyle(
                     fontSize: 32,
@@ -48,14 +48,14 @@ class LoginScreenState extends State<LoginScreen> {
                   controller: _usernameController,
                   decoration: InputDecoration(
                     labelText: 'Nombre de usuario',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Colors.white24, // Fondo claro para contraste
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -68,14 +68,14 @@ class LoginScreenState extends State<LoginScreen> {
                   obscureText: true, // Ocultar texto de la contraseña
                   decoration: InputDecoration(
                     labelText: 'Contraseña',
-                    labelStyle: TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Colors.white24, // Fondo claro para contraste
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.white),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -100,20 +100,18 @@ class LoginScreenState extends State<LoginScreen> {
 
                     // Verificar que ambos campos no estén vacíos
                     if (_username.isNotEmpty && _password.isNotEmpty) {
-                      // Navegar a Welcome reemplazando la pila de navegación
+                      // Navegar a PetScreen reemplazando la pila de navegación
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              WelcomeScreen(username: _username),
+                          builder: (context) => const PetScreen(), // Cambiar a PetScreen
                         ),
                       );
                     } else {
-                      // Mostrar un mensaje de error si algún campo está vacío
+                      // Mostrar mensaje de error
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text(
-                              'Por favor, ingrese nombre de usuario y contraseña.'),
+                          content: Text('Por favor, ingrese nombre de usuario y contraseña.'),
                         ),
                       );
                     }
