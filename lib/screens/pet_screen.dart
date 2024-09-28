@@ -32,7 +32,7 @@ class PetScreen extends StatelessWidget {
             color: Colors.green, // Cambia de color según el estado
             child: const Center(
               child: Text(
-                'Estado: Saludable',
+                'Saludable',
                 style: TextStyle(color: Colors.white),
               ),
             ),
