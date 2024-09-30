@@ -4,12 +4,16 @@ import 'package:project1_movil_g7/screens/login.dart';
 import 'package:project1_movil_g7/screens/habits_completion.dart';
 import 'package:project1_movil_g7/screens/habits_management.dart';
 import 'package:project1_movil_g7/screens/pet_screen.dart';
-import 'package:provider/provider.dart'; // Importa el paquete provider
+import 'package:provider/provider.dart'; 
+import 'providers/habit_provider.dart'; 
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => BottomNavProvider(), // Proporciona el BottomNavProvider
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => BottomNavProvider()), // Proporciona BottomNavProvider
+        ChangeNotifierProvider(create: (_) => HabitProvider()), // Proporciona HabitProvider
+      ],
       child: const MyApp(),
     ),
   );

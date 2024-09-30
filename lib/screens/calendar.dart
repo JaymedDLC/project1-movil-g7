@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Paquete para trabajar con fechas
 import '../widgets/footer_navigation.dart';
 import '../widgets/appbar.dart';
-import 'welcome.dart';
+
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({super.key});
