@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'calendar.dart';
-import 'login.dart'; // Asegúrate de tener esta importación
+
 
 class WelcomeScreen extends StatelessWidget {
   final String username;

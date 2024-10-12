@@ -1,4 +1,4 @@
-class Habit {
+/*class Habit {
   String name;
   String frequency;
   bool isActive;
@@ -18,4 +18,12 @@ class Habit {
   void toggleActive() {
     isActive = !isActive;
   }
+} */
+
+
+class Habit {
+  String name;
+  String frequency;
+
+  Habit({required this.name, required this.frequency});
 }
