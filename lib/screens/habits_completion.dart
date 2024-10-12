@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/habit_provider.dart';
 
 class HabitCompletionScreen extends StatelessWidget {
-  const HabitCompletionScreen({Key? key}) : super(key: key);
+  const HabitCompletionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,6 @@ class HabitCompletionScreen extends StatelessWidget {
     int totalHabits = habitProvider.habits.length;
     int completedHabits = habitProvider.habits.where((habit) => habit.isCompleted).length;
     double completionPercentage = (totalHabits == 0) ? 0 : (completedHabits / totalHabits) * 100;
-
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -25,7 +24,7 @@ class HabitCompletionScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Container(
               height: 100,
-              color: Colors.grey[200], 
+              color: Colors.grey[200],
               child: Center(
                 child: Text(
                   '${completionPercentage.toStringAsFixed(0)}% de hábitos cumplidos',
@@ -40,7 +39,7 @@ class HabitCompletionScreen extends StatelessWidget {
               itemCount: totalHabits,
               itemBuilder: (context, index) {
                 final habit = habitProvider.habits[index];
-                
+
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundColor: habit.isCompleted ? Colors.green : Colors.red, // Color dependiendo de si está completado o no
@@ -50,12 +49,12 @@ class HabitCompletionScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(habit.name),
-                  subtitle: Text(habit.frequency),
+                  subtitle: Text('${habit.frequencyValue} ${habit.frequencyUnit.toString().split('.').last.capitalize()}'), // Mostrar frecuencia
                   trailing: Checkbox(
                     value: habit.isCompleted,
                     onChanged: (bool? value) {
                       if (value == true) {
-                        _confirmCompletion(context, habitProvider, index); // Confirmar antes de
+                        _confirmCompletion(context, habitProvider, index); // Confirmar antes de marcar como completado
                       }
                     },
                   ),
@@ -95,5 +94,12 @@ class HabitCompletionScreen extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+// Extensión para capitalizar el primer carácter
+extension StringCapitalization on String {
+  String capitalize() {
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
 }
