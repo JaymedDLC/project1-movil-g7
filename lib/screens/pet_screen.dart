@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project1_movil_g7/main.dart';
 import 'package:provider/provider.dart';
 import '../widgets/footer_navigation.dart';
 import '../widgets/appbar.dart';
@@ -125,7 +126,7 @@ class _PetScreenState extends State<PetScreen> {
                       'Progreso del día: ${completionPercentage.toStringAsFixed(0)}%',
                       style: const TextStyle(fontSize: 16),
                     ),
-                    if (completionPercentage == 100) // Felicitaciones al 100%
+                    if (completionPercentage == 100)
                       const Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
@@ -162,27 +163,23 @@ class _PetScreenState extends State<PetScreen> {
                             '${habit.frequencyValue} ${capitalize(habit.frequencyUnit.toString().split('.').last)}',
                           ),
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const HabitCompletionScreen(),
-                              ),
-                            );
+                            final provider = Provider.of<BottomNavProvider>(
+                                context,
+                                listen: false);
+                            provider.updateIndex(1); // Cambia al índice 1
+                            Navigator.pushReplacementNamed(
+                                context, '/habitsCompletion');
                           },
                         ),
                       )
                       .toList(),
 
-              // Botón para aumentar la racha
               ElevatedButton(
                 onPressed: increaseStreak,
                 child: const Text('Aumentar Racha'),
               ),
             ],
           ),
-
-          // Botón de la tienda en la esquina inferior derecha
           Positioned(
             bottom: 20,
             right: 20,
