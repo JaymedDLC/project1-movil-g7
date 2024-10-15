@@ -7,7 +7,8 @@ class ShopScreen extends StatefulWidget {
   _ShopScreenState createState() => _ShopScreenState();
 }
 
-class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateMixin {
+class _ShopScreenState extends State<ShopScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -42,7 +43,7 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
           Container(
             height: 100,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Colors.blue, Colors.orange],
                 begin: Alignment.topLeft,
@@ -145,11 +146,12 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
               onPressed: () {
                 _showPurchaseDialog(category, index);
               },
-              child: const Text('Comprar'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 textStyle: const TextStyle(fontSize: 14),
               ),
+              child: const Text('Comprar'),
             ),
           ],
         ),
@@ -163,7 +165,8 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Comprar Artículo $index'),
-          content: Text('¿Deseas comprar este artículo de la categoría $category?'),
+          content:
+              Text('¿Deseas comprar este artículo de la categoría $category?'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancelar'),

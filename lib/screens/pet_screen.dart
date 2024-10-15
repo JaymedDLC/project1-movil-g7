@@ -191,10 +191,10 @@ class _PetScreenState extends State<PetScreen> {
                 );
               },
               backgroundColor: const Color.fromARGB(255, 38, 186, 192),
-              child: const Icon(Icons.store),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
+              child: const Icon(Icons.store),
             ),
           ),
         ],
