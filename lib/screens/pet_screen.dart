@@ -4,6 +4,7 @@ import '../widgets/footer_navigation.dart';
 import '../widgets/appbar.dart';
 import 'shop_screen.dart';
 import '../providers/habit_provider.dart';
+import 'habits_completion.dart'; // Importar la pantalla de confirmación de hábitos
 
 class PetScreen extends StatefulWidget {
   const PetScreen({super.key});
@@ -32,6 +33,20 @@ class _PetScreenState extends State<PetScreen> {
     }
   }
 
+  // Filtrar los próximos hábitos no completados
+  List<dynamic> getNextHabits(HabitProvider habitProvider) {
+    return habitProvider.habits
+        .where((habit) => !habit.isCompleted)
+        .take(2)
+        .toList();
+  }
+
+  // Función para capitalizar un string
+  String capitalize(String text) {
+    if (text.isEmpty) return text;
+    return '${text[0].toUpperCase()}${text.substring(1)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final habitProvider = Provider.of<HabitProvider>(context);
@@ -40,7 +55,7 @@ class _PetScreenState extends State<PetScreen> {
         habitProvider.habits.where((h) => h.isCompleted).length;
     double completionPercentage =
         totalHabits == 0 ? 0 : (completedHabits / totalHabits) * 100;
-    final nextHabits = habitProvider.habits.take(2).toList();
+    final nextHabits = getNextHabits(habitProvider);
 
     return Scaffold(
       appBar: const CustomAppBar(),
@@ -122,8 +137,16 @@ class _PetScreenState extends State<PetScreen> {
                   leading: const Icon(Icons.check_circle_outline),
                   title: Text(habit.name),
                   subtitle: Text(
-                    '${habit.frequencyValue} ${habit.frequencyUnit.toString().split('.').last.capitalize()}',
+                    '${habit.frequencyValue} ${capitalize(habit.frequencyUnit.toString().split('.').last)}',
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HabitCompletionScreen(),
+                      ),
+                    );
+                  },
                 ),
               ),
 
@@ -157,12 +180,5 @@ class _PetScreenState extends State<PetScreen> {
       ),
       bottomNavigationBar: const FooterNavigation(),
     );
-  }
-}
-
-// Extensión para capitalizar el primer carácter
-extension StringCapitalization on String {
-  String capitalize() {
-    return '${this[0].toUpperCase()}${substring(1)}';
   }
 }
