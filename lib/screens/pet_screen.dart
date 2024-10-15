@@ -125,6 +125,17 @@ class _PetScreenState extends State<PetScreen> {
                       'Progreso del día: ${completionPercentage.toStringAsFixed(0)}%',
                       style: const TextStyle(fontSize: 16),
                     ),
+                    if (completionPercentage == 100) // Felicitaciones al 100%
+                      const Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          '🎉 ¡Felicidades! Has completado todos tus hábitos de hoy.',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -132,23 +143,36 @@ class _PetScreenState extends State<PetScreen> {
               // Próximos hábitos/actividades
               const SizedBox(height: 10),
               const Text('Próximos hábitos:', style: TextStyle(fontSize: 20)),
-              ...nextHabits.map(
-                (habit) => ListTile(
-                  leading: const Icon(Icons.check_circle_outline),
-                  title: Text(habit.name),
-                  subtitle: Text(
-                    '${habit.frequencyValue} ${capitalize(habit.frequencyUnit.toString().split('.').last)}',
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HabitCompletionScreen(),
+              ...nextHabits.isEmpty
+                  ? [
+                      const ListTile(
+                        leading: Icon(Icons.check_circle, color: Colors.green),
+                        title: Text(
+                          'No tienes más hábitos por completar hoy.',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
-                    );
-                  },
-                ),
-              ),
+                    ]
+                  : nextHabits
+                      .map(
+                        (habit) => ListTile(
+                          leading: const Icon(Icons.check_circle_outline),
+                          title: Text(habit.name),
+                          subtitle: Text(
+                            '${habit.frequencyValue} ${capitalize(habit.frequencyUnit.toString().split('.').last)}',
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const HabitCompletionScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                      .toList(),
 
               // Botón para aumentar la racha
               ElevatedButton(
