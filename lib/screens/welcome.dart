@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'calendar.dart';
 
-
 class WelcomeScreen extends StatelessWidget {
   final String username;
 
@@ -12,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Elimina la flecha de retroceso
-        title: const Text('Gestión de Hábitos'),
+        title: const Text('Mi Mejor Ser'),
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle),
