@@ -1,5 +1,7 @@
 # 🐾 Mi Mejor Ser
 
+[![Ver Demo](https://img.shields.io/badge/Ver-Demo-blue?style=for-the-badge&logo=youtube)](https://youtu.be/zqXbgj1oE7w) 
+
 **Mi Mejor Ser** es una aplicación móvil desarrollada en **Flutter** que tiene como objetivo fomentar la adopción de hábitos saludables mediante el uso de gamificación. Los usuarios pueden realizar un seguimiento de sus prácticas diarias, completar objetivos, ganar monedas y cuidar a una mascota virtual mientras progresan hacia su mejor versión.
 
 ---
