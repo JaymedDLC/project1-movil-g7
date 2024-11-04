@@ -4,6 +4,7 @@ import '../widgets/appbar.dart';
 import 'package:provider/provider.dart';
 import '../providers/habit_provider.dart';
 import '../models/habit.dart';
+import 'habits_creation.dart'; // Importa la nueva pantalla de creación/edición
 
 class HabitManagementScreen extends StatelessWidget {
   const HabitManagementScreen({super.key});
@@ -37,7 +38,15 @@ class HabitManagementScreen extends StatelessWidget {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              _editHabit(context, habitProvider, index);
+                              // Redirige a la pantalla de edición de hábito
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HabitCreationScreen(
+                                    habit: habit, // Pasa el hábito para editar
+                                  ),
+                                ),
+                              );
                             },
                             child: const Text('Editar'),
                           ),
@@ -57,7 +66,13 @@ class HabitManagementScreen extends StatelessWidget {
           ),
           FloatingActionButton(
             onPressed: () {
-              _createHabit(context, habitProvider);
+              // Redirige a la pantalla de creación de hábito
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HabitCreationScreen(),
+                ),
+              );
             },
             backgroundColor: Colors.blue,
             child: const Icon(Icons.add),
@@ -66,184 +81,5 @@ class HabitManagementScreen extends StatelessWidget {
       ),
       bottomNavigationBar: const FooterNavigation(),
     );
-  }
-
-  void _createHabit(BuildContext context, HabitProvider habitProvider) {
-    String habitName = '';
-    int frequencyValue = 1; // Valor por defecto
-    FrequencyType frequencyUnit = FrequencyType.days; // Unidad por defecto
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: const Text('Crear Hábito'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    onChanged: (value) {
-                      habitName = value;
-                    },
-                    decoration:
-                        const InputDecoration(labelText: 'Nombre del hábito'),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) {
-                            frequencyValue =
-                                int.tryParse(value) ?? 1; // Convertir a número
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                              labelText: 'Frecuencia (número)'),
-                        ),
-                      ),
-                      const SizedBox(width: 8.0),
-                      DropdownButton<FrequencyType>(
-                        value: frequencyUnit,
-                        onChanged: (FrequencyType? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              frequencyUnit = newValue;
-                            });
-                          }
-                        },
-                        items: FrequencyType.values
-                            .map<DropdownMenuItem<FrequencyType>>(
-                                (FrequencyType value) {
-                          return DropdownMenuItem<FrequencyType>(
-                            value: value,
-                            child: Text(value
-                                .toString()
-                                .split('.')
-                                .last), // Muestra solo el nombre del enum
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (habitName.isNotEmpty && frequencyValue > 0) {
-                      habitProvider.addHabit(habitName, frequencyValue,
-                          frequencyUnit); // Agregar hábito
-                      Navigator.of(context).pop();
-                    }
-                  },
-                  child: const Text('Crear'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void _editHabit(
-      BuildContext context, HabitProvider habitProvider, int index) {
-    String habitName = habitProvider.habits[index].name;
-    FrequencyType frequencyUnit = habitProvider.habits[index].frequencyUnit;
-    int frequencyValue = habitProvider.habits[index].frequencyValue;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              title: const Text('Editar Hábito'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: TextEditingController(text: habitName),
-                    onChanged: (value) {
-                      habitName = value;
-                    },
-                    decoration:
-                        const InputDecoration(labelText: 'Nombre del hábito'),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextField(
-                          onChanged: (value) {
-                            frequencyValue =
-                                int.tryParse(value) ?? 1; // Convertir a número
-                          },
-                          keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(
-                              labelText: 'Frecuencia (número)'),
-                        ),
-                      ),
-                      const SizedBox(width: 8.0),
-                      DropdownButton<FrequencyType>(
-                        value: frequencyUnit,
-                        onChanged: (FrequencyType? newValue) {
-                          if (newValue != null) {
-                            setState(() {
-                              frequencyUnit = newValue;
-                            });
-                          }
-                        },
-                        items: FrequencyType.values
-                            .map<DropdownMenuItem<FrequencyType>>(
-                                (FrequencyType value) {
-                          return DropdownMenuItem<FrequencyType>(
-                            value: value,
-                            child: Text(value
-                                .toString()
-                                .split('.')
-                                .last), // Muestra solo el nombre del enum
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    habitProvider.editHabit(
-                        index, habitName, frequencyValue, frequencyUnit);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('Guardar'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-// Extensión para capitalizar el primer carácter
-extension StringCapitalization on String {
-  String capitalize() {
-    return '${this[0].toUpperCase()}${substring(1)}';
   }
 }

@@ -20,7 +20,8 @@ class HabitProvider with ChangeNotifier {
       frequencyValue: frequencyValue,
       frequencyUnit: frequencyUnit,
       isCompleted: false,
-      nextDue: DateTime.now().add(_getDuration(frequencyValue, frequencyUnit)), // Calcular próxima fecha de vencimiento
+      nextDue: DateTime.now().add(_getDuration(frequencyValue,
+          frequencyUnit)), // Calcular próxima fecha de vencimiento
     );
     _habits.add(newHabit);
     saveHabits();
@@ -34,14 +35,16 @@ class HabitProvider with ChangeNotifier {
     });
   }
 
-  void editHabit(int index, String name, int frequencyValue, FrequencyType frequencyUnit) {
+  void editHabit(
+      int index, String name, int frequencyValue, FrequencyType frequencyUnit) {
     _habits[index] = Habit(
       id: _habits[index].id,
       name: name,
       frequencyValue: frequencyValue,
       frequencyUnit: frequencyUnit,
       isCompleted: false,
-      nextDue: DateTime.now().add(_getDuration(frequencyValue, frequencyUnit)), // Actualizar la próxima fecha de vencimiento
+      nextDue: DateTime.now().add(_getDuration(frequencyValue,
+          frequencyUnit)), // Actualizar la próxima fecha de vencimiento
     );
     saveHabits();
     notifyListeners();
@@ -67,7 +70,9 @@ class HabitProvider with ChangeNotifier {
     notifyListeners();
 
     // Desmarcar el hábito después de la frecuencia especificada
-    Timer(_getDuration(_habits[index].frequencyValue, _habits[index].frequencyUnit), () {
+    Timer(
+        _getDuration(
+            _habits[index].frequencyValue, _habits[index].frequencyUnit), () {
       _habits[index].isCompleted = false; // Desmarcar el hábito
       saveHabits(); // Guardar los cambios
       notifyListeners(); // Notificar a los listeners
@@ -95,7 +100,8 @@ class HabitProvider with ChangeNotifier {
 
   Future<void> saveHabits() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> habitStrings = _habits.map((habit) => habitToJson(habit)).toList();
+    List<String> habitStrings =
+        _habits.map((habit) => habitToJson(habit)).toList();
     await prefs.setStringList('habits', habitStrings);
   }
 
@@ -103,7 +109,9 @@ class HabitProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? habitStrings = prefs.getStringList('habits');
     if (habitStrings != null) {
-      _habits = habitStrings.map((habitString) => habitFromJson(habitString)).toList();
+      _habits = habitStrings
+          .map((habitString) => habitFromJson(habitString))
+          .toList();
       notifyListeners();
     }
   }
@@ -126,9 +134,11 @@ class HabitProvider with ChangeNotifier {
       id: habitData['id'],
       name: habitData['name'],
       frequencyValue: habitData['frequencyValue'],
-      frequencyUnit: FrequencyType.values[habitData['frequencyUnit']], // Convertir índice a enum
+      frequencyUnit: FrequencyType
+          .values[habitData['frequencyUnit']], // Convertir índice a enum
       isCompleted: habitData['isCompleted'],
-      nextDue: DateTime.parse(habitData['nextDue']), // Convertir String a DateTime
+      nextDue:
+          DateTime.parse(habitData['nextDue']), // Convertir String a DateTime
     );
   }
 
@@ -137,4 +147,7 @@ class HabitProvider with ChangeNotifier {
     saveHabits();
     notifyListeners();
   }
+
+  void updateHabit(String id, String habitName, int frequencyValue,
+      FrequencyType frequencyUnit) {}
 }
