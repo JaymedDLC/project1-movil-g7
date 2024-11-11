@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../models/habit.dart';
 import '../providers/habit_provider.dart';
 import 'package:provider/provider.dart';
-import 'habits_frecuency.dart'; // Importa la pantalla de selección de frecuencia
+import 'habits_frecuency.dart';
 
 class HabitCreationScreen extends StatefulWidget {
   final Habit? habit;
 
-  const HabitCreationScreen({Key? key, this.habit}) : super(key: key);
+  const HabitCreationScreen({super.key, this.habit});
 
   @override
   _HabitCreationScreenState createState() => _HabitCreationScreenState();
@@ -15,6 +15,7 @@ class HabitCreationScreen extends StatefulWidget {
 
 class _HabitCreationScreenState extends State<HabitCreationScreen> {
   String habitName = '';
+  String habitDescription = '';
   int frequencyValue = 1;
   FrequencyType frequencyUnit = FrequencyType.days;
 
@@ -23,6 +24,7 @@ class _HabitCreationScreenState extends State<HabitCreationScreen> {
     super.initState();
     if (widget.habit != null) {
       habitName = widget.habit!.name;
+      habitDescription = widget.habit!.description;
       frequencyValue = widget.habit!.frequencyValue;
       frequencyUnit = widget.habit!.frequencyUnit;
     }
@@ -30,14 +32,31 @@ class _HabitCreationScreenState extends State<HabitCreationScreen> {
 
   void saveHabit() {
     final habitProvider = Provider.of<HabitProvider>(context, listen: false);
-    if (widget.habit == null) {
-      // Crea un nuevo hábito
-      habitProvider.addHabit(habitName, frequencyValue, frequencyUnit);
-    } else {
-      // Actualiza el hábito existente
-      habitProvider.updateHabit(
-          widget.habit!.id, habitName, frequencyValue, frequencyUnit);
+    if (habitName.isEmpty || frequencyValue <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, complete todos los campos.')),
+      );
+      return;
     }
+
+    if (widget.habit == null) {
+      habitProvider.addHabit(
+          habitName, habitDescription, frequencyValue, frequencyUnit);
+    } else {
+      habitProvider.editHabit(
+        _getIndex(widget.habit!.id),
+        habitName,
+        habitDescription,
+        frequencyValue,
+        frequencyUnit,
+      );
+    }
+  }
+
+  int _getIndex(String id) {
+    return Provider.of<HabitProvider>(context, listen: false)
+        .habits
+        .indexWhere((habit) => habit.id == id);
   }
 
   @override
@@ -46,7 +65,7 @@ class _HabitCreationScreenState extends State<HabitCreationScreen> {
       appBar: AppBar(
         title: Text(widget.habit == null ? 'Crear Hábito' : 'Editar Hábito'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             saveHabit();
             Navigator.pop(context);
@@ -65,6 +84,15 @@ class _HabitCreationScreenState extends State<HabitCreationScreen> {
               decoration: const InputDecoration(labelText: 'Nombre del hábito'),
             ),
             const SizedBox(height: 16),
+            TextField(
+              onChanged: (value) {
+                habitDescription = value;
+              },
+              controller: TextEditingController(text: habitDescription),
+              decoration:
+                  const InputDecoration(labelText: 'Descripción del hábito'),
+            ),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,9 +103,14 @@ class _HabitCreationScreenState extends State<HabitCreationScreen> {
                     final result = await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FrequencySelectorScreen(
-                          initialFrequencyValue: frequencyValue,
-                          initialFrequencyUnit: frequencyUnit,
+                        builder: (context) => HabitFrequencySelector(
+                          onSave: (FrequencyType selectedUnit,
+                              int selectedValue, List<String>? otherData) {
+                            setState(() {
+                              frequencyUnit = selectedUnit;
+                              frequencyValue = selectedValue;
+                            });
+                          },
                         ),
                       ),
                     );

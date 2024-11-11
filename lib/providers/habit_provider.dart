@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/habit.dart';
 import 'dart:convert';
-import 'dart:async'; // Importar para usar
+import 'dart:async';
 
 class HabitProvider with ChangeNotifier {
   List<Habit> _habits = [];
@@ -10,57 +10,63 @@ class HabitProvider with ChangeNotifier {
   List<Habit> get habits => _habits;
 
   HabitProvider() {
-    loadHabits(); // Cargar hábitos almacenados
+    loadHabits();
   }
 
-  void addHabit(String name, int frequencyValue, FrequencyType frequencyUnit) {
+  void addHabit(String name, String description, int frequencyValue,
+      FrequencyType frequencyUnit) {
     final newHabit = Habit(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
+      description: description,
       frequencyValue: frequencyValue,
       frequencyUnit: frequencyUnit,
       isCompleted: false,
-      nextDue: DateTime.now().add(_getDuration(frequencyValue,
-          frequencyUnit)), // Calcular próxima fecha de vencimiento
+      nextDue: DateTime.now().add(_getDuration(frequencyValue, frequencyUnit)),
     );
     _habits.add(newHabit);
     saveHabits();
     notifyListeners();
 
-    // Desmarcar el hábito después de la frecuencia especificada
     Timer(_getDuration(frequencyValue, frequencyUnit), () {
-      newHabit.isCompleted = false; // Desmarcar el hábito
-      saveHabits(); // Guardar los cambios
-      notifyListeners(); // Notificar a los listeners
+      newHabit.isCompleted = false;
+      saveHabits();
+      notifyListeners();
     });
   }
 
-  void editHabit(
-      int index, String name, int frequencyValue, FrequencyType frequencyUnit) {
+  void editHabit(int index, String name, String description, int frequencyValue,
+      FrequencyType frequencyUnit) {
     _habits[index] = Habit(
       id: _habits[index].id,
       name: name,
+      description: description,
       frequencyValue: frequencyValue,
       frequencyUnit: frequencyUnit,
       isCompleted: false,
-      nextDue: DateTime.now().add(_getDuration(frequencyValue,
-          frequencyUnit)), // Actualizar la próxima fecha de vencimiento
+      nextDue: DateTime.now().add(_getDuration(frequencyValue, frequencyUnit)),
     );
     saveHabits();
     notifyListeners();
 
-    // Desmarcar el hábito después de la frecuencia especificada
     Timer(_getDuration(frequencyValue, frequencyUnit), () {
-      _habits[index].isCompleted = false; // Desmarcar el hábito
-      saveHabits(); // Guardar los cambios
-      notifyListeners(); // Notificar a los listeners
+      _habits[index].isCompleted = false;
+      saveHabits();
+      notifyListeners();
     });
+  }
+
+  void deleteHabit(String id) {
+    _habits.removeWhere((habit) => habit.id == id);
+    saveHabits();
+    notifyListeners();
   }
 
   void markHabitAsCompleted(int index) {
     _habits[index] = Habit(
       id: _habits[index].id,
       name: _habits[index].name,
+      description: _habits[index].description,
       frequencyValue: _habits[index].frequencyValue,
       frequencyUnit: _habits[index].frequencyUnit,
       isCompleted: true,
@@ -69,34 +75,27 @@ class HabitProvider with ChangeNotifier {
     saveHabits();
     notifyListeners();
 
-    // Desmarcar el hábito después de la frecuencia especificada
     Timer(
         _getDuration(
             _habits[index].frequencyValue, _habits[index].frequencyUnit), () {
-      _habits[index].isCompleted = false; // Desmarcar el hábito
-      saveHabits(); // Guardar los cambios
-      notifyListeners(); // Notificar a los listeners
+      _habits[index].isCompleted = false;
+      saveHabits();
+      notifyListeners();
     });
   }
 
   Duration _getDuration(int frequencyValue, FrequencyType frequencyUnit) {
     switch (frequencyUnit) {
-      case FrequencyType.seconds:
-        return Duration(seconds: frequencyValue);
-      case FrequencyType.minutes:
-        return Duration(minutes: frequencyValue);
       case FrequencyType.hours:
         return Duration(hours: frequencyValue);
       case FrequencyType.days:
         return Duration(days: frequencyValue);
       case FrequencyType.months:
-        return Duration(days: frequencyValue * 30); // Aproximación
+        return Duration(days: frequencyValue * 30);
       default:
         return Duration.zero;
     }
   }
-
-  // Métodos para guardar y cargar los hábitos (con shared_preferences)
 
   Future<void> saveHabits() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -120,10 +119,11 @@ class HabitProvider with ChangeNotifier {
     final Map<String, dynamic> habitData = {
       'id': habit.id,
       'name': habit.name,
+      'description': habit.description,
       'frequencyValue': habit.frequencyValue,
-      'frequencyUnit': habit.frequencyUnit.index, // Guardar el índice del enum
+      'frequencyUnit': habit.frequencyUnit.index,
       'isCompleted': habit.isCompleted,
-      'nextDue': habit.nextDue.toIso8601String(), // Convertir DateTime a String
+      'nextDue': habit.nextDue.toIso8601String(),
     };
     return jsonEncode(habitData);
   }
@@ -133,21 +133,11 @@ class HabitProvider with ChangeNotifier {
     return Habit(
       id: habitData['id'],
       name: habitData['name'],
+      description: habitData['description'],
       frequencyValue: habitData['frequencyValue'],
-      frequencyUnit: FrequencyType
-          .values[habitData['frequencyUnit']], // Convertir índice a enum
+      frequencyUnit: FrequencyType.values[habitData['frequencyUnit']],
       isCompleted: habitData['isCompleted'],
-      nextDue:
-          DateTime.parse(habitData['nextDue']), // Convertir String a DateTime
+      nextDue: DateTime.parse(habitData['nextDue']),
     );
   }
-
-  void deleteHabit(String id) {
-    _habits.removeWhere((habit) => habit.id == id);
-    saveHabits();
-    notifyListeners();
-  }
-
-  void updateHabit(String id, String habitName, int frequencyValue,
-      FrequencyType frequencyUnit) {}
 }

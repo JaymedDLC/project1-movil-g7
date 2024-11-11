@@ -70,7 +70,7 @@ class HabitManagementScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HabitCreationScreen(),
+                  builder: (context) => const HabitCreationScreen(),
                 ),
               );
             },
